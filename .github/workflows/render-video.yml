@@ -1,0 +1,55 @@
+name: Render Smart Alarm Solutions video ad
+
+on:
+  push:
+    branches:
+      - main
+      - "claude/**"
+    paths:
+      - "video/**"
+      - ".github/workflows/render-video.yml"
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: video/package-lock.json
+
+      - name: Install Linux deps for headless Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 \
+            libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 \
+            libgbm1 libpango-1.0-0 libasound2t64 libxshmfence1 \
+            fonts-liberation
+
+      - name: Install npm deps
+        working-directory: video
+        run: npm ci
+
+      - name: Render vertical (1080x1920)
+        working-directory: video
+        run: npx remotion render SmartAlarmAd-Reels out/smart-alarm-reels.mp4
+
+      - name: Render square (1080x1080)
+        working-directory: video
+        run: npx remotion render SmartAlarmAd-Square out/smart-alarm-square.mp4
+
+      - name: Upload rendered videos
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-alarm-ad-videos
+          path: video/out/*.mp4
+          retention-days: 90
