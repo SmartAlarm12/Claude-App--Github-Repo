@@ -8,6 +8,7 @@
 - **Company:** Smart Alarm Solutions, LLC
 - **Website:** https://www.smartalarmllc.com
 - **Phone:** (256) 275-0767
+- **Email:** info@smartalarmllc.com
 - **Address:** 6585 Hwy 431 South, Suite E #449, Hampton Cove, AL 35763
 - **Service area:** Huntsville, Madison County, Hampton Cove, Owens Cross
   Roads, and surrounding North Alabama
@@ -16,17 +17,26 @@
 - **Facebook:** facebook.com/smartalarmsolutions
 - **Chamber:** Huntsville/Madison County Chamber member
 
-> Note: Couldn't directly scrape the site (access blocked). Pull the exact
-> logo file and brand hex codes from smartalarmllc.com before publishing and
-> drop them into the "Brand assets" block below.
+## Brand assets
 
-## Brand assets (fill in from site)
+- **Logo:** Gold-on-black shield with circuit-board pattern, "SMART ALARM
+  SOLUTIONS" wordmark in metallic gold gradient. Save the user-supplied
+  master at `assets/smart-alarm-logo.png`.
+- **Primary gold (metallic gradient):**
+  - Mid: `#D4AF37`
+  - Highlight: `#F5D061`
+  - Shadow: `#A07C1B`
+- **Background black:** `#000000`
+- **Accent (circuit traces / fine lines):** `#FFFFFF`
+- **Font:** Sans-serif, geometric / slightly tech feel (e.g., Eurostile,
+  Exo 2, Orbitron, or Montserrat) to match the wordmark.
 
-- **Logo:** Download from smartalarmllc.com header → save as
-  `assets/smart-alarm-logo.png` (and a white/reversed version for dark ads).
-- **Primary color:** `#______` (from site header/buttons — confirm)
-- **Secondary / accent:** `#______` (confirm)
-- **Font:** Match site (sans-serif like Montserrat / Open Sans is typical)
+## Color usage rules
+
+- Default ad background: **black** with the gold logo + gold headline accents.
+- Body copy: **white** on black (or near-white `#F2F2F2`) for max contrast.
+- CTA button: **gold `#D4AF37`** with black text — never gold-on-gold.
+- Avoid pastel or off-brand color overlays; keep it tight to gold + black + white.
 
 ---
 
@@ -46,6 +56,7 @@ security across Huntsville, Hampton Cove, and Owens Cross Roads.
 Free in-home consultation.
 
 📞 (256) 275-0767
+✉️ info@smartalarmllc.com
 🌐 smartalarmllc.com
 
 **Headline:** Smart Homes. Serious Sound. Unreal Theaters.
@@ -134,7 +145,7 @@ DM us or call (256) 275-0767 for a free consultation.
 
 > **Smart Alarm Solutions**
 > ELAN Authorized • Home Theater • Automation • Security
-> smartalarmllc.com  •  (256) 275-0767
+> smartalarmllc.com  •  (256) 275-0767  •  info@smartalarmllc.com
 
 ## Hashtags (organic cross-post)
 
