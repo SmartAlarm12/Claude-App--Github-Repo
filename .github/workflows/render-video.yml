@@ -1,0 +1,91 @@
+name: Render Smart Alarm Solutions video ad
+
+on:
+  push:
+    branches:
+      - main
+      - "claude/**"
+    paths:
+      - "video/**"
+      - ".github/workflows/render-video.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    if: ${{ !contains(github.event.head_commit.message, '[skip render]') }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: video/package-lock.json
+
+      - name: Install Linux deps for headless Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 \
+            libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 \
+            libgbm1 libpango-1.0-0 libasound2t64 libxshmfence1 \
+            fonts-liberation ffmpeg
+
+      - name: Install npm deps
+        working-directory: video
+        run: npm ci
+
+      - name: Render vertical (1080x1920)
+        working-directory: video
+        run: npx remotion render SmartAlarmAd-Reels out/smart-alarm-reels.mp4
+
+      - name: Render square (1080x1080)
+        working-directory: video
+        run: npx remotion render SmartAlarmAd-Square out/smart-alarm-square.mp4
+
+      - name: Generate GIF preview (480x480, 12fps)
+        working-directory: video
+        run: |
+          mkdir -p preview
+          ffmpeg -y -i out/smart-alarm-square.mp4 \
+            -vf "fps=12,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse" \
+            -loop 0 preview/smart-alarm-square.gif
+
+      - name: Generate thumbnail (frame ~3s)
+        working-directory: video
+        run: |
+          ffmpeg -y -ss 3 -i out/smart-alarm-square.mp4 \
+            -frames:v 1 -q:v 2 preview/smart-alarm-thumbnail.jpg
+
+      - name: Copy mp4s into preview folder for inline GitHub playback
+        working-directory: video
+        run: cp out/smart-alarm-reels.mp4 out/smart-alarm-square.mp4 preview/
+
+      - name: Commit preview assets back to branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add video/preview/
+          if git diff --cached --quiet; then
+            echo "No preview changes to commit."
+            exit 0
+          fi
+          git commit -m "Render video previews [skip render]"
+          git push origin HEAD:${{ github.ref_name }}
+
+      - name: Upload rendered videos as workflow artifact (backup)
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-alarm-ad-videos
+          path: video/out/*.mp4
+          retention-days: 90
